@@ -1,0 +1,8 @@
+---
+- hosts: all
+  becom: yes
+  become_user: root
+  tasks:
+    - selinux:
+        policy: targeted
+        state: enforcing
