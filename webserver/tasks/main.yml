@@ -1,0 +1,32 @@
+    - name: install the latest version of Apache
+      yum:
+        name: httpd
+        state: present
+
+    - name: start HTTPD
+      systemd:
+        name: httpd.service
+        state: started
+        enabled: true
+
+    - name: fill Website with Content
+      template:
+        dest: /var/www/html/index.html
+        src: index.html.j2
+
+    - name: add FOO header to HTTP response
+      lineinfile:
+        dest: /etc/httpd/conf.d/headers.conf
+        line: "Header set X-Foobar: FOO"
+        create: True
+        regex: "Header set X-Foobar:"
+      notify: reload httpd service
+
+    - name: add BAR header to HTTP response
+      lineinfile:
+        dest: /etc/httpd/conf.d/headers.conf
+        line: "Header set X-Foobar: BAR"
+        create: True
+        regex: "Header set X-Foobar:"
+      notify: reload httpd service
+
