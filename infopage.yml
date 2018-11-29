@@ -19,16 +19,23 @@
         dest: /var/www/html/index.html
         src: index.html.j2
 
-    - name: add header to HTTP response
+    - name: add FOO header to HTTP response
       lineinfile:
         dest: /etc/httpd/conf.d/headers.conf
         line: "Header set X-Foobar: FOO"
-        regex: "Header set X-FOObar:"
-        create: True
-      register: headers_conf
+        regex: "Header set X-Foobar:"
+      notify: reload httpd service
 
-    - name: reload http service if needed
+    - name: add BAR header to HTTP response
+      lineinfile:
+        dest: /etc/httpd/conf.d/headers.conf
+        line: "Header set X-Foobar: BAR"
+        regex: "Header set X-Foobar:"
+      notify: reload httpd service
+
+
+  handlers:
+    - name: reload httpd service
       systemd:
         service: httpd.service
         state: reloaded
-      when: headers_conf is changed
