@@ -1,0 +1,19 @@
+---
+- hosts: all
+  become: True
+  become_user: root
+  tasks:
+    - name: install the latest version of Apache
+      yum:
+        name: httpd
+        state: present
+
+    - name: start HTTPD
+      systemd:
+        name: httpd.service
+        state: started
+
+    - name: fill Website with Content
+      template:
+        dest: /var/www/html/index.html
+        src: index.html.j2
